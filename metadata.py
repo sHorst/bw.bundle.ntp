@@ -1,23 +1,13 @@
-@metadata_processor
-def add_apt_packages(metadata):
-    if node.has_bundle("apt"):
-        metadata.setdefault('apt', {})
-        metadata['apt'].setdefault('packages', {})
+defaults = {}
 
-        metadata['apt']['packages']['ntp'] = {
-            'installed': True,
+if node.has_bundle("apt"):
+    defaults['apt'] = {
+        'packages': {
+            'ntp': {'installed': True}
         }
+    }
 
-    return metadata, DONE
-
-
-@metadata_processor
-def add_iptables_rules(metadata):
-    if node.has_bundle("iptables"):
-        # we are available on all interfaces
-        metadata += repo.libs.iptables.accept(). \
-            state_new(). \
-            udp(). \
-            dest_port(123)
-
-    return metadata, DONE
+if node.has_bundle("iptables"):
+    defaults += repo.libs.iptables.accept(). \
+        udp(). \
+        dest_port(123)
