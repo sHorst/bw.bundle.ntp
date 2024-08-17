@@ -1,0 +1,11 @@
+{% for server, config in cfg.get("servers", {}).items() %}
+server {{ server }} {{ ' '.join(config) }}
+{% endfor %}
+tos orphan 15
+
+{% for restriction in cfg.get("restrictions", []) %}
+restrict {{ ' '.join(restriction) }}
+{% endfor %}
+
+driftfile /var/lib/ntp/ntp.drift
+logfile /var/log/ntp.log
